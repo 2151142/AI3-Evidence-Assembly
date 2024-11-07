@@ -1,0 +1,193 @@
+{
+  "name": "ai3-topology.yml",
+  "type": "clab",
+  "clab": {
+    "config": {
+      "prefix": "clab",
+      "mgmt": {
+        "network": "clab",
+        "bridge": "br-5b38445949f7",
+        "ipv4-subnet": "172.20.20.0/24",
+        "ipv4-gw": "172.20.20.1",
+        "ipv6-subnet": "3fff:172:20:20::/64",
+        "ipv6-gw": "2001:172:20:20::1",
+        "mtu": 1500,
+        "external-access": true
+      }
+    }
+  },
+  "nodes": {
+    "centralServer": {
+      "index": "0",
+      "shortname": "centralServer",
+      "longname": "clab-ai3-topology.yml-centralServer",
+      "fqdn": "centralServer.ai3-topology.yml.io",
+      "group": "",
+      "labdir": "/home/t2151142/nerdstuff/s2_ctfstuff/AI3buildingblocks/clab-ai3-topology.yml/centralServer",
+      "kind": "linux",
+      "image": "alpine",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.4",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::4",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-5b38445949f7",
+        "clab-node-group": "",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/t2151142/nerdstuff/s2_ctfstuff/AI3buildingblocks/clab-ai3-topology.yml/centralServer",
+        "clab-node-name": "centralServer",
+        "clab-node-type": "",
+        "clab-owner": "t2151142",
+        "clab-topo-file": "/home/t2151142/nerdstuff/s2_ctfstuff/AI3buildingblocks/ai3-topology.yml",
+        "containerlab": "ai3-topology.yml",
+        "graph-icon": "host",
+        "graph-layer": "2"
+      },
+      "port-bindings": [
+      ]
+    },
+    "openvswitch": {
+      "index": "1",
+      "shortname": "openvswitch",
+      "longname": "clab-ai3-topology.yml-openvswitch",
+      "fqdn": "openvswitch.ai3-topology.yml.io",
+      "group": "",
+      "labdir": "/home/t2151142/nerdstuff/s2_ctfstuff/AI3buildingblocks/clab-ai3-topology.yml/openvswitch",
+      "kind": "linux",
+      "image": "alpine",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.5",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::5",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-5b38445949f7",
+        "clab-node-group": "",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/t2151142/nerdstuff/s2_ctfstuff/AI3buildingblocks/clab-ai3-topology.yml/openvswitch",
+        "clab-node-name": "openvswitch",
+        "clab-node-type": "",
+        "clab-owner": "t2151142",
+        "clab-topo-file": "/home/t2151142/nerdstuff/s2_ctfstuff/AI3buildingblocks/ai3-topology.yml",
+        "containerlab": "ai3-topology.yml",
+        "graph-icon": "switch",
+        "graph-layer": "1"
+      },
+      "port-bindings": [
+      ]
+    },
+    "workstation1": {
+      "index": "2",
+      "shortname": "workstation1",
+      "longname": "clab-ai3-topology.yml-workstation1",
+      "fqdn": "workstation1.ai3-topology.yml.io",
+      "group": "",
+      "labdir": "/home/t2151142/nerdstuff/s2_ctfstuff/AI3buildingblocks/clab-ai3-topology.yml/workstation1",
+      "kind": "linux",
+      "image": "alpine",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.2",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::2",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-5b38445949f7",
+        "clab-node-group": "",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/t2151142/nerdstuff/s2_ctfstuff/AI3buildingblocks/clab-ai3-topology.yml/workstation1",
+        "clab-node-name": "workstation1",
+        "clab-node-type": "",
+        "clab-owner": "t2151142",
+        "clab-topo-file": "/home/t2151142/nerdstuff/s2_ctfstuff/AI3buildingblocks/ai3-topology.yml",
+        "containerlab": "ai3-topology.yml",
+        "graph-icon": "host",
+        "graph-layer": "2"
+      },
+      "port-bindings": [
+      ]
+    },
+    "workstation2": {
+      "index": "3",
+      "shortname": "workstation2",
+      "longname": "clab-ai3-topology.yml-workstation2",
+      "fqdn": "workstation2.ai3-topology.yml.io",
+      "group": "",
+      "labdir": "/home/t2151142/nerdstuff/s2_ctfstuff/AI3buildingblocks/clab-ai3-topology.yml/workstation2",
+      "kind": "linux",
+      "image": "alpine",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.3",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "2001:172:20:20::3",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-5b38445949f7",
+        "clab-node-group": "",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/t2151142/nerdstuff/s2_ctfstuff/AI3buildingblocks/clab-ai3-topology.yml/workstation2",
+        "clab-node-name": "workstation2",
+        "clab-node-type": "",
+        "clab-owner": "t2151142",
+        "clab-topo-file": "/home/t2151142/nerdstuff/s2_ctfstuff/AI3buildingblocks/ai3-topology.yml",
+        "containerlab": "ai3-topology.yml",
+        "graph-icon": "host",
+        "graph-layer": "2"
+      },
+      "port-bindings": [
+      ]
+    }
+  },
+  "links": [
+    {
+      "a": {
+        "node": "workstation1",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:e3:90:89",
+        "peer": "z"
+      },
+      "z": {
+        "node": "openvswitch",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:f6:6d:50",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "workstation2",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:f1:7f:74",
+        "peer": "z"
+      },
+      "z": {
+        "node": "openvswitch",
+        "interface": "eth2",
+        "mac": "aa:c1:ab:5c:bf:d8",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "centralServer",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:ef:88:66",
+        "peer": "z"
+      },
+      "z": {
+        "node": "openvswitch",
+        "interface": "eth3",
+        "mac": "aa:c1:ab:2e:90:ec",
+        "peer": "a"
+      }
+    }
+  ]
+}

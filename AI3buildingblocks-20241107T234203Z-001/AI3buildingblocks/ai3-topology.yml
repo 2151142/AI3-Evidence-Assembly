@@ -1,0 +1,125 @@
+name: ai3-topology.yml
+topology: 
+  nodes:
+    openvswitch:
+      kind: linux 
+      labels:
+        graph-layer: 1   # Assign the switch layer clearly
+        graph-icon: switch
+      image: alpine
+      exec: 
+        - apk update
+        - apk add bash openvswitch
+        - mkdir -p /var/run/openvswitch  # Ensure the directory for OVS sockets and PID exists
+        - mkdir -p /etc/openvswitch      # Ensure the directory for OVS configuration files exists
+        - ovsdb-tool create /etc/openvswitch/conf.db /usr/share/openvswitch/vswitch.ovsschema
+        - ovsdb-server --remote=punix:/var/run/openvswitch/db.sock --remote=db:Open_vSwitch,Open_vSwitch,manager_options --pidfile --detach
+        - ovs-vswitchd --pidfile --detach
+        - ovs-vsctl add-br br0           # Add OVS bridge br0
+        - ovs-vsctl add-port br0 eth1    # Add eth1 to the bridge
+        - ovs-vsctl add-port br0 eth2    # Add eth2 to the bridge
+        - ovs-vsctl add-port br0 eth3    # Add eth3 to the bridge
+        - ip link set br0 promisc on     # Enable promiscuous mode on bridge br0
+        - ip link set eth1 promisc on    # Enable promiscuous mode on eth1 connected to the bridge
+        - ip link set eth2 promisc on    # Enable promiscuous mode on eth2 connected to the bridge
+        - ip link set eth3 promisc on
+
+    workstation1:
+      kind: linux
+      image: alpine
+      labels:
+        graph-layer: 2   # Ensure clear separation for workstations
+        graph-icon: host
+      exec:
+        - apk update
+        - apk add iproute2 bash
+        - ip addr add 10.0.0.1/24 dev eth1
+        - ip link set eth1 up
+        - apk add busybox-extras
+        - apk add expect # For automating Telnet
+        - apk add bash termshark tcpdump
+      #  - sh /config/send_message.sh &
+        - echo "---------------------------------> workstation1 complete"
+        - sh /config/ssh_config.sh
+      binds:
+        - ./autoinstallscripts/ssh_stuff:/config
+        - ./autoinstallscripts:/config
+      #chmod +x autoinstallscripts/send_message.sh  # Make the script executable
+      #autoinstallscripts/send_message.sh &  # Start the script in the background ##May need to run it again
+
+    workstation2:
+      kind: linux
+      image: alpine
+      labels:
+        graph-icon: host
+        graph-layer: 2   # Ensure clear separation for workstations
+      exec:
+        - apk update
+        - apk add iproute2 bash
+        - ip addr add 10.0.0.2/24 dev eth1
+        - ip link set eth1 up
+        - apk add busybox-extras termshark tcpdump
+        - sh /config/ssh_config.sh
+        - echo "---------------------------------> workstation2 complete"
+      binds:
+        - ./autoinstallscripts/ssh_stuff:/config
+
+    centralServer:
+      kind: linux
+      image: alpine
+      labels:
+        graph-icon: host
+        graph-layer: 2
+      exec:
+        - apk update
+        - apk add iproute2 busybox-extras iptables openrc
+        - ip addr add 10.0.0.3/24 dev eth1
+        - ip link set eth1 up
+        - adduser admin -D -m
+        - echo "admin:passw0rd123" | chpasswd
+        - echo "passwd"
+        - echo "AI3.NSpassw0rd"
+        - openrc
+        - mkdir /run/openrc -p 
+        - touch /run/openrc/softlevel
+        - rc-update add inetd default
+        - killall inetd || true  # Ensure no inetd is running
+        - inetd &                # Start inetd manually
+        - iptables -A INPUT -p tcp --dport 23 -j ACCEPT  # Allow port 23 through iptables
+        - echo "telnet stream tcp nowait testuser /usr/sbin/telnetd telnetd" > /etc/inetd.conf  # Create inetd.conf
+        - /usr/sbin/telnetd -l /bin/sh &
+        - touch .secret.flag
+        - chmod 666 .secret.flag
+        - echo 'You found the flag!' > .secret.flag
+        - echo "---------------------------------> centralServer complete"
+        - sh /config/ssh_config.sh
+      binds:
+        - ./autoinstallscripts/ssh_stuff:/config
+        
+      ports:
+        - "2222:22/tcp"
+
+  
+  links:
+    - endpoints: ["workstation1:eth1", "openvswitch:eth1"]
+    - endpoints: ["workstation2:eth1", "openvswitch:eth2"]
+    - endpoints: ["centralServer:eth1", "openvswitch:eth3"]
+
+    #access wireshark in /usr/bin/wireshark
+    #docker network create my_bridge
+    #run this stuff: 
+## Run Open vSwitch (if applicable) 
+#docker run -d --name openvswitch --network my_bridge alpine /bin/sh -c "apk update && apk add openvswitch && mkdir -p /var/run/openvswitch && mkdir -p /etc/openvswitch && ovsdb-tool create /etc/openvswitch/conf.db /usr/share/openvswitch/vswitch.ovsschema && ovsdb-server --remote=punix:/var/run/openvswitch/db.sock --remote=db:Open_vSwitch,Open_vSwitch,manager_options --pidfile --detach && ovs-vswitchd --pidfile --detach && ovs-vsctl add-br br0"
+
+## Run workstation1
+#docker run -d --name workstation1 --network my_bridge alpine /bin/sh -c "apk update && apk add iproute2 bash busybox-extras expect telnet && ip addr add 10.0.0.1/24 dev eth0 && ip link set eth0 up && while true; do echo 'Hello from workstation1' && sleep 60; done"
+
+#docker run -d --name workstation2 --network my_bridge alpine /bin/sh -c "apk update && apk add iproute2 bash busybox-extras && ip addr add 10.0.0.2/24 dev eth0 && ip link set eth0 up"
+
+## Run centralServer
+#docker run -d --name centralServer --network my_bridge alpine /bin/sh -c "apk update && apk add iproute2 bash busybox-extras telnet expect && ip addr add 10.0.0.3/24 dev eth0 && ip link set eth0 up && telnetd -l /bin/sh &"
+####telnet/wireshark/something to do with the network isn't working, stand by for correction #fixed using tcpdump
+
+#Actually Important Commands
+#tcpdump -i <interfacee> -w output.pcap
+#termshark output.pcap
